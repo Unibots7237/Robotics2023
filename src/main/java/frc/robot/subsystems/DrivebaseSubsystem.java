@@ -4,25 +4,29 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class DrivebaseSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public DrivebaseSubsystem() {}
 
-  public Talon frontrighttalon = new Talon(Constants.frontrighttalonport);
-  public Talon frontlefttalon = new Talon(Constants.frontlefttalonport);
-  public Talon backrighttalon = new Talon(Constants.backrighttalonport);
-  public Talon backlefttalon = new Talon(Constants.backlefttalonport);
+  public WPI_TalonSRX frontrighttalon = new WPI_TalonSRX(Constants.frontrighttalonport);
+  public WPI_TalonSRX frontlefttalon = new WPI_TalonSRX(Constants.frontlefttalonport);
+  public WPI_VictorSPX backrightvictor = new WPI_VictorSPX(Constants.backrightvictorport);
+  public WPI_VictorSPX backleftvictor = new WPI_VictorSPX(Constants.backleftvictorport);
 
-  MotorControllerGroup right = new MotorControllerGroup(frontrighttalon, backrighttalon);
-  MotorControllerGroup left = new MotorControllerGroup(frontlefttalon, backlefttalon);
+  MotorControllerGroup right = new MotorControllerGroup(frontrighttalon, backrightvictor);
+  MotorControllerGroup left = new MotorControllerGroup(frontlefttalon, backleftvictor);
 
   DifferentialDrive mdrive = new DifferentialDrive(right, left);
 
@@ -43,6 +47,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
          turn = 0;
      }
 
+     SmartDashboard.putNumber("move", move);
+     SmartDashboard.putNumber("turn", turn);
      mdrive.arcadeDrive(turn, move);
  }
 

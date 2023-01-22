@@ -17,10 +17,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public static final int frontrighttalonport = 0;
-  public static final int frontlefttalonport = 1;
-  public static final int backrighttalonport = 2;
-  public static final int backlefttalonport = 3;
+  public static final int frontrighttalonport = 1;
+  public static final int frontlefttalonport = 2;
+  public static final int backrightvictorport = 4;
+  public static final int backleftvictorport = 3;
 
   public static final int xboxcontroller = 0;
 

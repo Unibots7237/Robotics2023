@@ -8,8 +8,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DrivebaseCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.GrabberCommand;
 import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -26,6 +28,9 @@ public class RobotContainer {
   private final DrivebaseSubsystem drivebasesub = new DrivebaseSubsystem();
   private final DrivebaseCommand drivebasecommand = new DrivebaseCommand(drivebasesub);
 
+  private final GrabberSubsystem grabbersubsystem = new GrabberSubsystem();
+  private final GrabberCommand grabbercommand = new GrabberCommand(grabbersubsystem);
+
   public static XboxController xboxcontroller = new XboxController(Constants.xboxcontroller);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -33,6 +38,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     drivebasesub.setDefaultCommand(drivebasecommand);
+    drivebasesub.setDefaultCommand(grabbercommand);
   }
 
   private void configureBindings() {

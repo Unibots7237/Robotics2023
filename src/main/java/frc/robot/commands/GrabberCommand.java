@@ -4,23 +4,23 @@
 
 package frc.robot.commands;
 
-import frc.robot.Robot;
-import frc.robot.subsystems.DrivebaseSubsystem;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class DrivebaseCommand extends CommandBase {
+public class GrabberCommand  extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DrivebaseSubsystem drivebasesub;
+  private final GrabberSubsystem m_subsystem;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DrivebaseCommand(DrivebaseSubsystem subsystem) {
-    drivebasesub = subsystem;
+  public GrabberCommand(GrabberSubsystem subsystem) {
+    m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -32,23 +32,16 @@ public class DrivebaseCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    double move2 = Robot.m_robotContainer.xboxcontroller.getLeftY();
-    double turn = Robot.m_robotContainer.xboxcontroller.getLeftX();
-
-    double accelerate = Robot.m_robotContainer.xboxcontroller.getRightTriggerAxis();
-    double deaccelerate = Robot.m_robotContainer.xboxcontroller.getLeftTriggerAxis();
-    double move = 0;
-
-    if (accelerate > 0.0) {
-        move = accelerate;
-        }
-    if (deaccelerate > 0.0) {
-        move = -deaccelerate;
-       }
-
-        this.drivebasesub.teleopDrive(move, turn);
-
+    boolean isGrabbing = false;
+    if (RobotContainer.xboxcontroller.getAButton()) {
+      if (isGrabbing = false) {
+        isGrabbing = true;
+        m_subsystem.ExtendGrabbers();
+      } else{
+        isGrabbing = false;
+        m_subsystem.RetractGrabbers();
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.
