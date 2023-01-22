@@ -4,30 +4,34 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 
-public class GrabberSubsystem extends SubsystemBase {
+public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public GrabberSubsystem() {}
+  public ElevatorSubsystem() {}
 
-  DoubleSolenoid grabbersolenoids = new DoubleSolenoid(5, PneumaticsModuleType.CTREPCM, 4, 5);
+  public CANSparkMax leftneomotor = new CANSparkMax(Constants.leftneomotor, MotorType.kBrushless);
+  public CANSparkMax rightneomotor = new CANSparkMax(Constants.rightneomotor, MotorType.kBrushless);
 
-  public void ExtendGrabbers() {
-    grabbersolenoids.toggle();
+  public MotorControllerGroup neos = new MotorControllerGroup(leftneomotor, rightneomotor);
+
+  public void spinNeoMotors(boolean up) {
+    
+    if (up) {
+      neos.set(Constants.elevatormotorspeed);
+    } else{
+      neos.set(-Constants.elevatormotorspeed);
+    }
   }
 
-  public void RetractGrabbers() {
-    grabbersolenoids.close();;
-  }
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
   public boolean exampleCondition() {
     // Query some boolean state, such as a digital sensor.
     return false;

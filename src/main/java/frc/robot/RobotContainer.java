@@ -7,10 +7,10 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DrivebaseCommand;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.GrabberCommand;
 import frc.robot.subsystems.DrivebaseSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +31,9 @@ public class RobotContainer {
   private final GrabberSubsystem grabbersubsystem = new GrabberSubsystem();
   private final GrabberCommand grabbercommand = new GrabberCommand(grabbersubsystem);
 
+  private final ElevatorSubsystem elevatorsubsystem = new ElevatorSubsystem();
+  private final ElevatorCommand elevatorcommand = new ElevatorCommand(elevatorsubsystem);
+
   public static XboxController xboxcontroller = new XboxController(Constants.xboxcontroller);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -38,7 +41,8 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     drivebasesub.setDefaultCommand(drivebasecommand);
-    drivebasesub.setDefaultCommand(grabbercommand);
+    grabbersubsystem.setDefaultCommand(grabbercommand);
+    elevatorsubsystem.setDefaultCommand(elevatorcommand);
   }
 
   private void configureBindings() {
