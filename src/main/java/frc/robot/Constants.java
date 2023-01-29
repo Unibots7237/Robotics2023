@@ -25,6 +25,9 @@ public final class Constants {
   public static final int leftneomotor = 0;
   public static final int rightneomotor = 1;
 
+  public static int solenoidforward = 0;
+  public static int solanoidreverse = 1;
+
   public static final int xboxcontroller = 0;
 
   public static final double elevatormotorspeed = 0.2;

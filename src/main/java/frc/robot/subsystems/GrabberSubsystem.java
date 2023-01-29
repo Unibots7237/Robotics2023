@@ -5,22 +5,29 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 
 public class GrabberSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public GrabberSubsystem() {}
 
-  DoubleSolenoid grabbersolenoids = new DoubleSolenoid(5, PneumaticsModuleType.CTREPCM, 4, 5);
+  DoubleSolenoid grabbersolenoids = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
+   Constants.solenoidforward, Constants.solanoidreverse);
 
+  //Solenoid grabbersolenoids = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
   public void ExtendGrabbers() {
-    grabbersolenoids.toggle();
+    grabbersolenoids.set(Value.kForward);
+    //grabbersolenoids.set(true);
   }
 
   public void RetractGrabbers() {
-    grabbersolenoids.close();;
+    grabbersolenoids.set(Value.kReverse);
+    //grabbersolenoids.set(false);
   }
 
   /**

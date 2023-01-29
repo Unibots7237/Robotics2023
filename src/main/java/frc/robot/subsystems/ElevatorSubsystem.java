@@ -24,7 +24,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   public MotorControllerGroup neos = new MotorControllerGroup(leftneomotor, rightneomotor);
 
   public void spinNeoMotors(boolean up) {
-    
     if (up) {
       neos.set(Constants.elevatormotorspeed);
     } else{

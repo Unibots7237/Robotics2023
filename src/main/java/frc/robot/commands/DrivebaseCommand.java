@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.DrivebaseSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
