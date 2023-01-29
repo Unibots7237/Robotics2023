@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
+import frc.robot.commands.AutonomousTurn;
 import frc.robot.commands.DrivebaseCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.GrabberCommand;
@@ -34,6 +34,8 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorsubsystem = new ElevatorSubsystem();
   private final ElevatorCommand elevatorcommand = new ElevatorCommand(elevatorsubsystem);
 
+  private final AutonomousTurn autonomousturn = new AutonomousTurn(drivebasesub);
+
   public static XboxController xboxcontroller = new XboxController(Constants.xboxcontroller);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -55,8 +57,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
-    // An example command will be run in autonomous
-    
+    return autonomousturn;    
   }
 }

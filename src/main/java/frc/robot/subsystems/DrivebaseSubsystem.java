@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
@@ -17,8 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class DrivebaseSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  public DrivebaseSubsystem() {}
+
+  public static ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
   public WPI_TalonSRX frontrighttalon = new WPI_TalonSRX(Constants.frontrighttalonport);
   public WPI_TalonSRX frontlefttalon = new WPI_TalonSRX(Constants.frontlefttalonport);
@@ -30,11 +31,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   DifferentialDrive mdrive = new DifferentialDrive(right, left);
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
+  public DrivebaseSubsystem() {
+    gyro.reset();
+  }
+
   public void teleopDrive(double move, double turn) {
 
     // SmartDashboard.putNumber("Left Encoder", Robot.m_robotContainer.drivebasesub.encoderLeft.getQuadraturePosition());
@@ -50,25 +50,48 @@ public class DrivebaseSubsystem extends SubsystemBase {
      SmartDashboard.putNumber("move", move);
      SmartDashboard.putNumber("turn", turn);
      mdrive.arcadeDrive(turn, move);
- }
+  }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
+  //this returns false when its done because in the autonomous command its checking if its still running or not
+  public boolean turnXdegrees(double degree) {
+    if (Math.abs(gyro.getAngle() - degree) < 0.25) {
+      return false;
+    }
+    if (Math.abs(gyro.getAngle() - degree) < 1) {
+      if (degree < 180) {
+        left.set(Constants.autoadjustturn);
+        right.set(-Constants.autoadjustturn);
+      } 
+      if (degree > 180) {
+        left.set(Constants.autoadjustturn);
+        right.set(Constants.autoadjustturn);
+      }
+    } else {
+      if (degree == 180 ) {
+        right.set(Constants.autoturnspeed);
+        left.set(-Constants.autoturnspeed);
+      }
+      if (degree < 180 ) {
+        left.set(Constants.autoturnspeed);
+        right.set(-Constants.autoturnspeed);
+      }
+      if (degree > 180) {
+        right.set(Constants.autoturnspeed);
+        left.set(-Constants.autoturnspeed);
+      }
+    }
+    return true;
+  }
+
   public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
     return false;
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
   }
 
   @Override
   public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
   }
 }
