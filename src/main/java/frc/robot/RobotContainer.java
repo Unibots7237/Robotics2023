@@ -5,7 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AutonomousTurn;
+import frc.robot.commands.AutonomousRightOfStation1BallPad;
+import frc.robot.commands.AutonomousRoutine1;
 import frc.robot.commands.DrivebaseCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.GrabberCommand;
@@ -13,6 +14,8 @@ import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -34,12 +37,19 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorsubsystem = new ElevatorSubsystem();
   private final ElevatorCommand elevatorcommand = new ElevatorCommand(elevatorsubsystem);
 
-  private final AutonomousTurn autonomousturn = new AutonomousTurn(drivebasesub);
+  private final AutonomousRoutine1 routine1 = new AutonomousRoutine1(drivebasesub);
+  private final AutonomousRightOfStation1BallPad autonomousrightofstation1ballpad = 
+    new AutonomousRightOfStation1BallPad(drivebasesub);
 
   public static XboxController xboxcontroller = new XboxController(Constants.xboxcontroller);
 
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_chooser.setDefaultOption("Test Routine/Routine 1", routine1);
+    m_chooser.addOption("Autonomous Right Of Station 1 Ball + Station", autonomousrightofstation1ballpad);
+    SmartDashboard.putData("Autonomous Routines", m_chooser);
     // Configure the trigger bindings
     configureBindings();
     drivebasesub.setDefaultCommand(drivebasecommand);
@@ -57,6 +67,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autonomousturn;    
+    return m_chooser.getSelected();    
   }
 }

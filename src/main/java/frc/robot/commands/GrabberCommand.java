@@ -27,7 +27,7 @@ public class GrabberCommand  extends CommandBase {
 
   @Override
   public void initialize() {
-    m_subsystem.RetractGrabbers();
+    m_subsystem.DisableGrabbers();
     timer.reset();
   }
 

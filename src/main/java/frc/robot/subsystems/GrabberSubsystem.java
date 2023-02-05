@@ -14,10 +14,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class GrabberSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public GrabberSubsystem() {}
-
-  DoubleSolenoid grabbersolenoids = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
+  DoubleSolenoid grabbersolenoids = new DoubleSolenoid(5, PneumaticsModuleType.CTREPCM, 
    Constants.solenoidforward, Constants.solanoidreverse);
+
+   public GrabberSubsystem() {
+    
+   }
 
   //Solenoid grabbersolenoids = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
   public void ExtendGrabbers() {
@@ -30,6 +32,11 @@ public class GrabberSubsystem extends SubsystemBase {
     //grabbersolenoids.set(false);
   }
 
+  public void DisableGrabbers() {
+    grabbersolenoids.set(Value.kOff);
+    //grabbersolenoids.set(true);
+  }
+ 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *

@@ -4,13 +4,17 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
@@ -20,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DrivebaseSubsystem extends SubsystemBase {
 
   public static ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+  public static AHRS gyroNAVX = new AHRS(I2C.Port.kOnboard);
 
   public WPI_TalonSRX frontrighttalon = new WPI_TalonSRX(Constants.frontrighttalonport);
   public WPI_TalonSRX frontlefttalon = new WPI_TalonSRX(Constants.frontlefttalonport);
@@ -31,14 +36,17 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   DifferentialDrive mdrive = new DifferentialDrive(right, left);
 
+  public SensorCollection encoderLeft = new SensorCollection(frontlefttalon);
+  public SensorCollection encoderRight = new SensorCollection(frontrighttalon);
+
+
   public DrivebaseSubsystem() {
     gyro.reset();
+    encoderLeft.setQuadraturePosition(0, 0);
+    encoderRight.setQuadraturePosition(0, 0);
   }
 
   public void teleopDrive(double move, double turn) {
-
-    // SmartDashboard.putNumber("Left Encoder", Robot.m_robotContainer.drivebasesub.encoderLeft.getQuadraturePosition());
-   //  SmartDashboard.putNumber("Right Encoder", Robot.m_robotContainer.drivebasesub.encoderRight.getQuadraturePosition());
 
      if (Math.abs(move) <= .05) {
          move = 0;
@@ -47,39 +55,92 @@ public class DrivebaseSubsystem extends SubsystemBase {
          turn = 0;
      }
 
-     SmartDashboard.putNumber("move", move);
-     SmartDashboard.putNumber("turn", turn);
+     SmartDashboard.putNumber("left encoder", encoderLeft.getQuadraturePosition());
+     SmartDashboard.putNumber("right encoder", encoderRight.getQuadraturePosition());
+     SmartDashboard.putNumber("Gyroscope", gyro.getAngle());
+     SmartDashboard.putNumber("NAVX Pitch", gyroNAVX.getPitch());
      mdrive.arcadeDrive(turn, move);
   }
 
   //this returns false when its done because in the autonomous command its checking if its still running or not
-  public boolean turnXdegrees(double degree) {
-    if (Math.abs(gyro.getAngle() - degree) < 0.25) {
-      return false;
+  public boolean turnXdegrees(double x) {
+
+    boolean turningClockWise = false;
+
+    Double degree = gyro.getAngle();
+    if (x > 180) {
+      x = 360-x;
+      turningClockWise = true;
+
     }
-    if (Math.abs(gyro.getAngle() - degree) < 1) {
-      if (degree < 180) {
-        left.set(Constants.autoadjustturn);
-        right.set(-Constants.autoadjustturn);
+
+    //x = the target angle. Because we want it to turn the shorter way to x, if its over 180 it needs to
+    //turn clockwise so it turns the shorter way, and x becomes 360-x
+
+    if (Math.abs(degree) - x < .75 &&
+        Math.abs(degree) - x > -.75) {
+        return false;
+    } else {
+      if (turningClockWise) {
+        left.set(Constants.autoturnspeed);
+        right.set(Constants.autoturnspeed);
+      } else {
+        left.set(-Constants.autoturnspeed);
+        right.set(-Constants.autoturnspeed);
       } 
-      if (degree > 180) {
-        left.set(Constants.autoadjustturn);
-        right.set(Constants.autoadjustturn);
+    }
+
+    return true;
+  }
+
+  //returns false when its done
+  public boolean DriveXInches(double inches) {
+    double rotations = inches * Constants.rotationsPerInch;
+
+    if (rotations > 0) {
+          //encoderleft is negative when forward so we multiply by -1
+      if ((encoderLeft.getQuadraturePosition()*-1) < rotations) {
+        left.set(Constants.autonomousdrivespeed);
+      } 
+      if ((encoderRight.getQuadraturePosition()) < rotations) {
+        right.set(-Constants.autonomousdrivespeed);
+      } 
+
+      if ((encoderRight.getQuadraturePosition()) >= rotations &&
+          encoderLeft.getQuadraturePosition() >= rotations) {
+          return false;
       }
     } else {
-      if (degree == 180 ) {
-        right.set(Constants.autoturnspeed);
-        left.set(-Constants.autoturnspeed);
-      }
-      if (degree < 180 ) {
-        left.set(Constants.autoturnspeed);
-        right.set(-Constants.autoturnspeed);
-      }
-      if (degree > 180) {
-        right.set(Constants.autoturnspeed);
-        left.set(-Constants.autoturnspeed);
+      if ((encoderLeft.getQuadraturePosition()*-1) > rotations) {
+        left.set(-Constants.autonomousdrivespeed);
+      } 
+      if ((encoderRight.getQuadraturePosition()) > rotations) {
+        right.set(Constants.autonomousdrivespeed);
+      } 
+
+      if ((encoderRight.getQuadraturePosition()) <= rotations &&
+          encoderLeft.getQuadraturePosition() <= rotations) {
+          return false;
       }
     }
+
+    return true;
+  } 
+
+  //up is positive, pointing down is negative
+  public boolean autoBalanceOnStation() {
+    if (gyroNAVX.getPitch() < 0.5 && gyroNAVX.getPitch() > -0.5) {
+      return false;
+    }
+    //its pointing up, meaning it needs to move forward to balance on the charging station
+    if (gyroNAVX.getPitch() > 0.5) {
+      mdrive.arcadeDrive(0, Constants.autonomousdrivespeed);
+    }
+    //now its pointing down so it needs to go back
+    if (gyroNAVX.getPitch() < -0.5) {
+      mdrive.arcadeDrive(0, -Constants.autonomousdrivespeed);
+    }
+
     return true;
   }
 
