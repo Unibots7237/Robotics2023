@@ -43,12 +43,10 @@ public class GrabberCommand  extends CommandBase {
 
       if (!debounce) {
         if (!isGrabbing) {
-          System.out.println("Extending");
           isGrabbing = true;
           m_subsystem.ExtendGrabbers();
 
         } else{
-          System.out.println("Retracting");
           isGrabbing = false;
           m_subsystem.RetractGrabbers();
         }
