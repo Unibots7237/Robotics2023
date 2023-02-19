@@ -22,15 +22,15 @@ public final class Constants {
   public static final int backrightvictorport = 4;
   public static final int backleftvictorport = 3;
 
-  public static final int leftneomotor = 0;
-  public static final int rightneomotor = 1;
+  public static final int leftneomotor = 9;
+  public static final int rightneomotor = 10;
 
   public static int solenoidforward = 0;
   public static int solanoidreverse = 1;
 
   public static final int xboxcontroller = 0;
 
-  public static final double elevatormotorspeed = 0.2;
+  public static final double elevatormotorspeed = 0.35;
   public static final double autoturnspeed = 0.35;
   public static final double autoadjustturn = 0.2;
 
@@ -44,5 +44,7 @@ public final class Constants {
   public static final double FirstElevatorHeight = 0;
   public static final double SecondElevatorHeight = 500;
   public static final double ThirdElevatorHeight = 1000;
+  public static final double maxElevatorHeight = 2500;
+  public static final double startingElevatorHeight = 750;
 
 }

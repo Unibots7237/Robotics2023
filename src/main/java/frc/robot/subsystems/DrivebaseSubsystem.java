@@ -101,20 +101,25 @@ public class DrivebaseSubsystem extends SubsystemBase {
     boolean increaseLeftSpeed = false;
     boolean increaseRightSpeed = false;
 
-    if (rotations > 0) {
-      if (gyro.getAngle() >= 1) {
-        increaseRightSpeed = true;
+    System.out.println(gyro.getAngle());
+
+
+    if ((encoderRight.getQuadraturePosition()- Math.abs(rotations)) > 150) {
+      if (rotations > 0) {
+        if (gyro.getAngle() >= .5) {
+          increaseRightSpeed = true;
+        }
+        if (gyro.getAngle() <= -.5) {
+          increaseLeftSpeed = true;
+        }
       }
-      if (gyro.getAngle() <= -1) {
-        increaseLeftSpeed = false;
-      }
-    }
-    if (rotations < 0) {
-      if (gyro.getAngle() >= 1) {
-        increaseRightSpeed = false;
-      }
-      if (gyro.getAngle() <= -1) {
-        increaseLeftSpeed = true;
+      if (rotations < 0) {
+        if (gyro.getAngle() >= .5) {
+          increaseLeftSpeed = true;
+        }
+        if (gyro.getAngle() <= -.5) {
+          increaseRightSpeed = true;
+        }
       }
     }
 

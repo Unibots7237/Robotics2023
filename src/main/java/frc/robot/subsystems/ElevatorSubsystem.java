@@ -16,22 +16,27 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public ElevatorSubsystem() {}
+  
 
   //have to manually lower to level 1 (lowest elevator height)
   public int currentElevatorLevel = 1;
-
 
   public CANSparkMax leftneomotor = new CANSparkMax(Constants.leftneomotor, MotorType.kBrushless);
   public CANSparkMax rightneomotor = new CANSparkMax(Constants.rightneomotor, MotorType.kBrushless);
 
   public MotorControllerGroup neos = new MotorControllerGroup(leftneomotor, rightneomotor);
 
+  public ElevatorSubsystem() {
+    leftneomotor.getEncoder().setPosition(Constants.startingElevatorHeight);
+  }
+
   public void spinNeoMotors(boolean up) {
-    if (up) {
-      neos.set(Constants.elevatormotorspeed);
-    } else{
-      neos.set(-Constants.elevatormotorspeed);
+    if (leftneomotor.getEncoder().getPosition() <= Constants.maxElevatorHeight) {
+      if (up) {
+        neos.set(-Constants.elevatormotorspeed);
+      } else{
+        neos.set(Constants.elevatormotorspeed);
+      } 
     }
   }
 

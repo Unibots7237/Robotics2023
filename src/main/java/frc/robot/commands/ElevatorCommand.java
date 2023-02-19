@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -32,27 +33,34 @@ public class ElevatorCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /* 
+     
+    SmartDashboard.setDefaultNumber("left neo encoder", m_subsystem.leftneomotor.getEncoder().getPosition());
     if (RobotContainer.xboxcontroller.getRightBumper()) {
       m_subsystem.spinNeoMotors(true);
-    }
-    if (RobotContainer.xboxcontroller.getLeftBumper()) {
+    } else if(RobotContainer.xboxcontroller.getLeftBumper()) {
       m_subsystem.spinNeoMotors(false);
-    }*/
+    } else{
+      m_subsystem.neos.set(0);
+    }
+    
 
     //left stick button = third level
     //right stick button = second level
     //left bumper = first level
 
-    if (timer.hasElapsed(1)) {
-      timer.stop();
-      timer.reset();
-      debounce = false;
+    /*
+    if (debounce) {
+      if (timer.hasElapsed(1)) {
+        timer.stop();
+        timer.reset();
+        debounce = false;
+      } 
     }
 
     if (movingthird) {
@@ -80,6 +88,7 @@ public class ElevatorCommand extends CommandBase {
         timer.start();
       }
     }
+    */
   }
 
   // Called once the command ends or is interrupted.

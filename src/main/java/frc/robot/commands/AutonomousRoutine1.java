@@ -39,15 +39,17 @@ public class AutonomousRoutine1 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    doingFirstMove = drivebasesub.autoBalanceOnStation();
+    doingFirstMove = drivebasesub.DriveXInches(30);
     if (!doingFirstMove) {
-      doingFirstMove = drivebasesub.autoBalanceOnStation();
+      doingFirstMove = drivebasesub.DriveXInches(30);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    drivebasesub.gyro.reset();
+  }
 
   // Returns true when the command should end.
   @Override
