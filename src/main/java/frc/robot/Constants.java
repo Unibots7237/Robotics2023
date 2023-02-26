@@ -49,6 +49,11 @@ public final class Constants {
   public static final double maxElevatorHeight = 90;
   public static final double startingElevatorHeight = 0;
 
+  public static final double startingArmHeight = 0;
+  public static final double raisedArmHeight = 50;
+
+  public static final double armMoveUpSpeed = .35;
+  public static final double armMoveDownSpeed = .25;
 
   //dpad numbers
   public static final int DPADLeft = 270;

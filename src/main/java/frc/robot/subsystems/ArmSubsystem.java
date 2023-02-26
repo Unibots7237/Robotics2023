@@ -22,13 +22,38 @@ public class ArmSubsystem extends SubsystemBase {
 
 
    public ArmSubsystem() {
-    
+    armneomotor.getEncoder().setPosition(Constants.startingArmHeight);
    }
-
 
    public void moveArm(double move) {
     armneomotor.set(move);
    }
+
+  public boolean raiseUnraiseArm(double height) {
+    double encoder = armneomotor.getEncoder().getPosition();
+
+    boolean goingDown = false;
+    if (height < encoder) {goingDown = true;}
+
+    if (goingDown) {
+      armneomotor.set(-Constants.armMoveDownSpeed);
+      if (encoder <= height+0.5) {
+        armneomotor.stopMotor();
+        armneomotor.set(0);
+        return false;
+      }
+    }
+    if (!goingDown) {
+      armneomotor.set(Constants.armMoveDownSpeed);
+      if (encoder <= height-0.5) {
+        armneomotor.stopMotor();
+        armneomotor.set(0);
+        return false;
+      }
+    }
+
+    return true;
+  }   
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
